@@ -1,0 +1,40 @@
+[ghq]
+  root = ~/src
+
+[core]
+  excludesfile = ~/.gitignore_global
+	autocrlf = input
+
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+
+[user]
+  name = Ryo Takaishi
+  email = ryo.takaishi.0@gmail.com
+
+[alias]
+  delete-merged-branches = !git branch --merged | grep -v \\* | xargs -I % git branch -d %
+  a = add
+  cl = clone
+  cm = commit
+  co = checkout
+  cob = checkout -b
+  d = diff
+  gpush = push origin HEAD
+  p = push
+  st = status
+  sw = switch
+  re = restore
+  vacuum = "!f () { git checkout $1; git branch --merged|egrep -v '\\*|develop|main'|xargs git branch -d; git fetch --prune; };f"
+
+
+[fetch]
+  prune = true
+
+[include]
+  path = ~/.gitconfig.local
+[init]
+	defaultBranch = main
