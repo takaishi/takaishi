@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+require 'pathname'
+
+r = `csearch -n '#{ARGV.join(" ")}' | fzf`
+
+splitted = r.split(':')
+
+
+"#{ENV['$HOME']}/src"
+
+file = splitted[0]
+line = splitted[1]
+pn = Pathname.new(file)
+Dir.chdir(pn.dirname) do |dir|
+  origin_url = `git config remote.origin.url`.chomp
+  puts "origin_url: #{origin_url}"
+
+  url = `gh repo view --json url --jq .url`.chomp
+  puts "url: #{url}"
+
+  hash = `git log -1 #{file} | grep commit`.split(' ')[1]
+  puts "hash: #{hash}"
+
+  path = `git ls-files --full-name #{file}`.chomp
+  puts "path: #{path}"
+
+  if file.end_with?('.md')
+    p "open #{url}/blob/#{hash}/#{path}?plain=1#L#{line}"
+    system "open #{url}/blob/#{hash}/#{path}?plain=1#L#{line}"
+  else
+    p "open #{url}/blob/#{hash}/#{path}#L#{line}"
+    system "open #{url}/blob/#{hash}/#{path}#L#{line}"
+  end
+end
+

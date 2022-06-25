@@ -1,0 +1,8 @@
+#!/bin/bash
+f=$(ls -t ~/Obsidian/*/Notes/*.md | sd "${HOME}/Obsidian/(.*)" '$1' | fzf --preview "head -n 100 ~/Obsidian/{}")
+
+if [ "${f}" != "" ]; then
+  name=$(basename "$f")
+  project=$(echo "$f" | cut -d '/' -f 1)
+  open "obsidian://open?vault=${project}&file=Notes%2F${name}"
+fi

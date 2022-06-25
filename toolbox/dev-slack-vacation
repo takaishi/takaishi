@@ -1,0 +1,52 @@
+#!/usr/bin/env ruby
+#
+# Original is https://github.com/hsbt/hsbt/blob/7887f188cb8adaa3fd0f518fc98df99c784d555f/toolbox/libexec/dev-slack-vacation
+
+require 'bundler/inline'
+require 'optparse'
+
+gemfile true do
+  source 'https://rubygems.org'
+  gem 'slack-ruby-client', require: true
+end
+
+op = OptionParser.new
+opts = {
+  start: '',
+  end: ''
+}
+
+op.on('-s', '--start VALUE', '') do |v|
+  opts[:start] = v
+end
+
+op.on('-e', '--end VALUE', '') do |v|
+  opts[:end] = v
+end
+
+begin
+  args = op.parse(ARGV)
+rescue OptionParser::InvalidOption => e
+  usage e.message
+end
+
+Slack.configure { |config| config.token = ENV["SLACK_API_TOKEN"] }
+client = Slack::Web::Client.new
+client.auth_test
+
+uid = ENV['SLACK_USER_ID']
+display_name = ENV['SLACK_DEFAULT_DISPLAY_NAME']
+full_name = ENV['SLACK_DEFAULT_FULL_NAME']
+
+if opts[:start] != ""
+  display_name += " (off #{opts[:start]}"
+  display_name += " - #{opts[:end]}" if opts[:end] != ""
+  display_name += ")"
+
+  full_name += " (off #{opts[:start]}"
+  full_name += " - #{opts[:end]}" if opts[:end] != ""
+  full_name += ")"
+end
+
+param = {user: uid, profile: {display_name: display_name, real_name: full_name}.to_json}
+client.users_profile_set(param)

@@ -1,0 +1,57 @@
+#!/bin/bash
+
+i="--non-interactive"
+
+# https://chitoku.jp/programming/bash-getopts-long-options
+while getopts c:iv-: opt; do
+  # OPTARG を = の位置で分割して opt と optarg に代入
+  optarg="$OPTARG"
+  if [[ "$opt" = - ]]; then
+    opt="-${OPTARG%%=*}"
+    optarg="${OPTARG/${OPTARG%%=*}/}"
+    optarg="${optarg#=}"
+
+    if [[ -z "$optarg" ]] && [[ ! "${!OPTIND}" = -* ]]; then
+      optarg="${!OPTIND}"
+      shift
+    fi
+  fi
+
+  case "-$opt" in
+    -c|--command)
+        c="$optarg"
+        ;;
+    -i|--interactive)
+        i="--interactive"
+        ;;
+    -v|--version)
+        echo 'v0.0.0'
+        exit
+        ;;
+    --)
+        break
+        ;;
+    -\?)
+        exit 1
+        ;;
+    --*)
+        echo "$0: illegal option -- ${opt##-}" >&2
+        exit 1
+        ;;
+    esac
+  done
+shift $((OPTIND - 1))
+
+
+cluster=$(aws ecs list-clusters | jq -r '.clusterArns[]' | fzf)
+service=$(aws ecs list-services --cluster $cluster | jq -r ".serviceArns[]" | fzf)
+task=$(aws ecs list-tasks --cluster $cluster --service $service | jq -r ".taskArns[]" | fzf)
+container=$(aws ecs describe-tasks --cluster $cluster --tasks $task | jq -r ".tasks[0].containers[] | .name" | fzf)
+
+aws ecs execute-command \
+  --cluster $cluster \
+  --task $task \
+  --container $container \
+  --command $c \
+  $i
+

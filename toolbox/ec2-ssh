@@ -1,0 +1,11 @@
+#!/bin/bash
+
+ip=$(awk -v OFS='\t' '$0 ~ /# [0-9]/ { print $2, $3, $4, $5, $6 }' ~/.ssh/conf.d/config.ec2 | fzf | cut -d $'\t' -f 1)
+[ -z "$ip" ] && exit 1
+
+echo "Login to $ip using the following options"
+echo "=================================================="
+grep -A5 "Host $ip" ~/.ssh/conf.d/config.ec2 | tail -n +2
+echo "=================================================="
+
+ssh $ip
