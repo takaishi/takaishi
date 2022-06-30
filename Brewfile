@@ -274,6 +274,7 @@ brew "qmk/qmk/mdloader"
 brew "qmk/qmk/qmk"
 brew "sachaos/todoist/todoist"
 brew "takaishi/fomulas/csv2tbl"
+brew "yq"
 
 
 cask "1password-cli"
