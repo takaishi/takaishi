@@ -18,6 +18,7 @@ Dir.chdir(`ghq root`.chomp) do
     Dir.chdir(dir) do
       system('git stash')
       system("git remote show origin | grep 'HEAD branch' | awk '{print $NF}' | xargs git switch")
+      system("git delete-merged-branches")
       system("git pull --rebase --prune")
       system('git submodule update --init --recursive')
       system('git gc --prune')
