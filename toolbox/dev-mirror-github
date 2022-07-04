@@ -35,12 +35,12 @@ client.auto_paginate = true
 repos = if opts[:org] != ''
           client.organization_repositories(opts[:org], type: 'all')
         elsif opts[:user] != ''
-          client.repositories(opts[:user], type: 'owner')
+          client.repositories(opts[:user], type: 'owner', archived: false)
         end
 
 repos.each do |repo|
   puts repo[:full_name]
-  if Dir.exists?("#{ENV['HOME']}/src/github.com/#{repo[:full_name]}")
+  unless Dir.exists?("#{ENV['HOME']}/src/github.com/#{repo[:full_name]}")
     system(`git clone #{repo[:ssh_url]} #{ENV['HOME']}/src/github.com/#{repo[:full_name]}`)
   end
 end
