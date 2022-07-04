@@ -9,7 +9,6 @@ cd ~/src/github.com/takaishi/takaishi
 git stash pop
 homesick link --force takaishi
 
-cd ~/.homesick/repos/takaishi/toolbox
 brew bundle
 brew update && brew upgrade && brew cleanup
 
