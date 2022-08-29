@@ -1,3 +1,6 @@
+# Fig pre block. Keep at the top of this file.
+#[[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && . "$HOME/.fig/shell/zshrc.pre.zsh"
+
 # Start configuration added by Zim install {{{
 #
 # User configuration sourced by interactive shells
@@ -95,7 +98,6 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 # ------------------
 # Initialize modules
 # ------------------
-
 ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
@@ -133,6 +135,12 @@ unset key
 
 
 export HISTFILE="$XDG_DATA_HOME"/zsh/history
+export HISTSIZE=100000
+export SAVEHIST=100000
+setopt share_history
+setopt append_history
+setopt hist_ignore_all_dups
+
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
@@ -176,8 +184,11 @@ export EDITOR=vim
 eval "$(direnv hook zsh)"
 
 
-setopt share_history
-
 eval "$(zoxide init zsh)"
 zle -N zi
 bindkey '^z' zi
+
+
+# Fig post block. Keep at the bottom of this file.
+#[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && . "$HOME/.fig/shell/zshrc.post.zsh"
+
