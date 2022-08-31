@@ -1,0 +1,16 @@
+#!/bin/bash
+
+ep=$1
+d=~/Projects/kimagurefm/002_episodes/kimagurefm-${ep}
+
+ffmpeg \
+  -loop 1 \
+  -r 30000/1001 \
+  -i ${d}/kimagurefm-${ep}.png \
+  -i ${d}/kimagurefm-${ep}_ミックスダウン.wav \
+  -s 1920x1080 \
+  -vcodec libx264 \
+  -acodec aac -strict experimental -ab 320k -ac 2 -ar 48000 \
+  -pix_fmt yuv420p \
+  -shortest \
+  ${d}/kimagurefm-${ep}.mp4

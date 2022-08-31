@@ -1,0 +1,15 @@
+#!/bin/bash
+
+ep=$1
+d=~/Projects/kimagurefm/002_episodes/kimagurefm-${ep}
+
+ffmpeg \
+  -i ${d}/kimagurefm-${ep}_ミックスダウン.wav \
+  -vn \
+  -ar 44100 \
+  -ac 1 \
+  -b:a 64k \
+  ${d}/kimagurefm-${ep}.mp3
+
+echo
+ced ${d}/kimagurefm-${ep}.mp3
