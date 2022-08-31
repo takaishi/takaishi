@@ -1,3 +1,5 @@
+export ZDOTDIR=$HOME/.config/zsh
+
 
 case $(uname -m) in
   x86_64 ) export HOMEBREW_DIR=/usr/local ;;
@@ -11,6 +13,7 @@ export FZF_DEFAULT_OPTS='--layout=reverse --border --exit-0'
 
 export PATH=$HOMEBREW_DIR/bin:$PATH
 export PATH=$HOME/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
 export PATH=$HOMEBREW_DIR/kubebuilder/bin/:$PATH
 export PATH=$HOMEBREW_DIR/python/libexec/bin:$PATH
 export PATH=$HOME/Library/Python/3.7/bin:$PATH
@@ -39,4 +42,4 @@ export RUBY_CONFIGURE_OPTS=--with-openssl-dir=$HOMEBREW_DIR/opt/openssl@1.1
 export PATH=$HOME/opt/google-cloud-sdk/bin:$PATH
 
 export PATH="$HOME/.rbenv/bin:$PATH"
-
+export GPG_TTY=$(tty)
