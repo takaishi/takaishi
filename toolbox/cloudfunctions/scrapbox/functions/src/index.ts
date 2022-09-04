@@ -54,7 +54,7 @@ ${nYearsAgo}
 }
 
 async function getPage(date: string) {
-  const resp = await fetch(`https://scrapbox.io/rtakaishi/${date}`, {
+  const resp = await fetch(`https://scrapbox.io/rtakaishi/${date}/text`, {
     method: "GET",
     headers: {
       Accept: "application/json",
