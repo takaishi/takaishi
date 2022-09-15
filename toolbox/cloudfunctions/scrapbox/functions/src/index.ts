@@ -37,16 +37,19 @@ async function run(today: Date, yearMonthDay: string) {
       return `[${dayjs(today.setFullYear(today.getFullYear() - n)).format("YYYY-MM-DD")}]`;
     }).join("\n");
     const body = `
-[*** 今日の n 年前]
-
-${nYearsAgo}
+[Journal]  [${yearMonthDay}]  [${year}]  [${yearMonth}]  [${monthDay}]
 
 [*** ナビ]
 
 前日 [${prevTitle}]
 翌日 [${nextTitle}]
 
-[Journal]  [${yearMonthDay}]  [${year}]  [${yearMonth}]  [${monthDay}]
+[*** 今日の n 年前]
+
+${nYearsAgo}
+
+[*** 今日のインターネット]
+
 `;
     return {exist: false, body: `https://scrapbox.io/rtakaishi/${yearMonthDay}?body=${encodeURI(body)}`};
   }
