@@ -8,13 +8,12 @@ import fetch from "node-fetch";
 
 export const index = functions.region('asia-northeast1').https.onRequest(async (request, response) => {
   const d = request.query.date
-  console.log(`d: ${d}`)
   if (d == undefined || d == '') {
     const today = new Date();
     const yearMonthDay = dayjs(today).locale("ja").format("YYYY-MM-DD");
     response.send(await run(today, yearMonthDay));
   } else {
-    const today = new Date();
+    const today = new Date(d.toString());
     response.send(await run(today, d.toString()));
   }
 });
