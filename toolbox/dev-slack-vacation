@@ -13,7 +13,8 @@ end
 op = OptionParser.new
 opts = {
   start: '',
-  end: ''
+  end: '',
+  msg: 'off'
 }
 
 op.on('-s', '--start VALUE', '') do |v|
@@ -22,6 +23,10 @@ end
 
 op.on('-e', '--end VALUE', '') do |v|
   opts[:end] = v
+end
+
+op.on('-m', '--message VALUE', '') do |v|
+  opts[:msg] = v
 end
 
 begin
@@ -35,15 +40,16 @@ client = Slack::Web::Client.new
 client.auth_test
 
 uid = ENV['SLACK_USER_ID']
+
 display_name = ENV['SLACK_DEFAULT_DISPLAY_NAME']
 full_name = ENV['SLACK_DEFAULT_FULL_NAME']
 
 if opts[:start] != ""
-  display_name += " (off #{opts[:start]}"
+  display_name += " (#{opts[:msg]} #{opts[:start]}"
   display_name += " - #{opts[:end]}" if opts[:end] != ""
   display_name += ")"
 
-  full_name += " (off #{opts[:start]}"
+  full_name += " (#{opts[:msg]} #{opts[:start]}"
   full_name += " - #{opts[:end]}" if opts[:end] != ""
   full_name += ")"
 end
