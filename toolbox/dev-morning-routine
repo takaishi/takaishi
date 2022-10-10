@@ -12,4 +12,5 @@ homesick link --force takaishi
 brew bundle
 brew update && brew upgrade && brew cleanup
 
+dev-install-ruby
 

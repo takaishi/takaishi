@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in $(rbenv install -l | grep -E '^[0-9].*'); do
+  rbenv install -s $i
+done
+
