@@ -277,6 +277,7 @@ brew "sachaos/todoist/todoist"
 brew "takaishi/fomulas/csv2tbl"
 brew "yq"
 
+cask "gpg-suite"
 cask "font-ricty-diminished"
 cask "1password-cli"
 cask "alacritty"
