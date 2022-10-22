@@ -33,7 +33,8 @@ async function run(today: Date, yearMonthDay: string) {
 
     const num = new Array(new Date().getFullYear() - 2020).fill(null).map((_, i) => i + 1);
     const nYearsAgo = num.map(function(n) {
-      return `[${dayjs(today.setFullYear(today.getFullYear() - n)).format("YYYY-MM-DD")}]`;
+      const tmp = new Date(today.toString())
+      return `[${dayjs(tmp.setFullYear(tmp.getFullYear() - n)).format("YYYY-MM-DD")}]`;
     }).join("\n");
     const body = `
 [Journal]  [${yearMonthDay}]  [${year}]  [${yearMonth}]  [${monthDay}]
