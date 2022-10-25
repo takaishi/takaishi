@@ -43,3 +43,4 @@ export PATH=$HOME/opt/google-cloud-sdk/bin:$PATH
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 export GPG_TTY=$(tty)
+. "$HOME/.cargo/env"
