@@ -2,27 +2,35 @@
 # Copy from https://github.com/hsbt/hsbt/blob/master/libexec/dev-source-update
 
 require 'bundler/inline'
+require 'open3'
 
 gemfile true do
   source 'https://rubygems.org'
   gem 'parallel', require: true
 end
 
+def run(dir, cmd)
+  out, err, status = Open3.capture3(cmd)
+  if err != '' && !err.start_with?('Already on ')
+    puts <<~EOS
+    ERROR: #{dir}, #{cmd}"
+    #{err}
+    EOS
+  end
+end
 
 Dir.chdir(`ghq root`.chomp) do
   Parallel.map(`ghq list`.split.shuffle) do |dir|
     next unless File.directory?(dir + '/.git')
 
-    puts dir
-
     Dir.chdir(dir) do
-      system('git stash')
-      system("git remote show origin | grep 'HEAD branch' | awk '{print $NF}' | xargs git switch")
-      system("git fetch")
-      system("git delete-merged-branches")
-      system("git pull --rebase --prune")
-      system('git submodule update --init --recursive')
-      system('git gc --prune')
+      run(dir, 'git stash')
+      run(dir, "git remote show origin | grep 'HEAD branch' | awk '{print $NF}' | xargs git switch")
+      run(dir, "git fetch")
+      run(dir, "git delete-merged-branches")
+      run(dir, "git pull --rebase --prune")
+      run(dir, 'git submodule update --init --recursive')
+      run(dir, 'git gc --prune')
     end
   end
 end
