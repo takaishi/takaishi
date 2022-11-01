@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+b = `git branch -a --format "%(refname)" | sd "refs/heads/" "" | sd "refs/" "" | fzf`.chomp
+
+commands = ''
+commands += "Checkout\n"
+commands += "New Branch from '#{b}'\n"
+commands += "Copy branch name"
+
+puts cmd = `echo "#{commands}" | fzf`.chomp
+
+case cmd
+when 'Checkout'
+  system("git switch #{b}")
+when /New Branch from.*/
+  `git switch #{b.gsub(/remotes\/origin\//, '')}`
+when 'Copy branch name'
+  `echo #{b} | pbcopy`
+end
