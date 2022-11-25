@@ -9,7 +9,7 @@ cd ~/src/github.com/takaishi/takaishi
 git stash pop
 homesick link --force takaishi
 
-brew bundle
+brew bundle --no-lock
 brew update && brew upgrade && brew cleanup
 
 dev-install-ruby
