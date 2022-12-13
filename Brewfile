@@ -290,7 +290,6 @@ cask "zoom"
 cask "obsidian"
 cask "visual-studio-code"
 
-mas "Evernote", id: 406056744
 mas "GIPHY", id: 668208984
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
@@ -300,7 +299,6 @@ mas "Todoist", id: 585829637
 mas "ToyViewer", id: 414298354
 mas "Yoink", id: 457622435
 mas "iMovie", id: 408981434
-mas "Habitify", id: 1111447047
 mas "MeetingBar", id: 1532419400
 mas "Tot", id: 1491071483
 
