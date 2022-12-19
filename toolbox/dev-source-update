@@ -10,11 +10,11 @@ gemfile true do
 end
 
 def run(dir, cmd)
-  out, err, status = Open3.capture3(cmd)
+  _, err, _ = Open3.capture3(cmd)
   if err != '' && !err.start_with?('Already on ')
     puts <<~EOS
-    ERROR: #{dir}, #{cmd}"
-    #{err}
+      ERROR: #{dir}, #{cmd}
+      #{err}
     EOS
   end
 end
@@ -23,14 +23,19 @@ Dir.chdir(`ghq root`.chomp) do
   Parallel.map(`ghq list`.split.shuffle) do |dir|
     next unless File.directory?(dir + '/.git')
 
+    puts dir
+
     Dir.chdir(dir) do
-      run(dir, 'git stash')
-      run(dir, "git remote show origin | grep 'HEAD branch' | awk '{print $NF}' | xargs git switch")
-      run(dir, "git fetch")
-      run(dir, "git delete-merged-branches")
-      run(dir, "git pull --rebase --prune")
-      run(dir, 'git submodule update --init --recursive')
-      run(dir, 'git gc --prune')
+      _, _, status = Open3.capture3('git config --local --get remote.origin.url')
+      if status.exited? && status.exitstatus.zero?
+        run(dir, 'git fetch --prune --no-tags')
+        run(dir, 'git stash')
+        run(dir, "git remote show origin | grep 'HEAD branch' | awk '{print $NF}' | xargs git switch")
+        run(dir, 'git pull --rebase --prune')
+        run(dir, 'git submodule update --init --recursive')
+        run(dir, 'git gc --prune')
+        run(dir, 'git delete-merged-branches')
+      end
     end
   end
 end
