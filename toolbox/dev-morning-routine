@@ -10,7 +10,7 @@ git stash pop
 homesick link --force takaishi
 
 brew bundle --no-lock
-brew update && brew upgrade && brew cleanup
+brew update && brew upgrade && brew upgrade --cask --greedy && brew cleanup
 
 dev-install-ruby
 
