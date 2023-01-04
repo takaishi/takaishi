@@ -20,6 +20,21 @@ def run(dir, cmd)
   end
 end
 
+#
+def has_origin_url?(dir)
+  Dir.chdir(dir) do
+    o, _, _ = Open3.capture3("git config remote.origin.url")
+    return o.length > 0
+  end
+end
+
+def deleted?(octokit, dir)
+  return false unless dir.start_with?('github.com/')
+
+  repo_name = dir.gsub('github.com/', '')
+  !octokit.repository?(repo_name)
+end
+
 def archived?(octokit, dir)
   return false unless dir.start_with?('github.com/')
 
@@ -45,6 +60,11 @@ Dir.chdir(root_dir) do
     next unless File.directory?("#{dir}/.git")
 
     puts dir
+
+    if has_origin_url?(dir) && deleted?(octokit, dir)
+      puts "delete deleted repo: #{root_dir}/#{dir}"
+      system("rm -rf #{root_dir}/#{dir}")
+    end
 
     if archived?(octokit, dir)
       puts "delete archived repo: #{root_dir}/#{dir}"
