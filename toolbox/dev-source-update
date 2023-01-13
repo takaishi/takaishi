@@ -56,7 +56,7 @@ if root_dir == '/'
 end
 
 Dir.chdir(root_dir) do
-  Parallel.map(`ghq list`.split.shuffle) do |dir|
+  Parallel.map(`ghq list`.split.shuffle, in_processes: 4) do |dir|
     next unless File.directory?("#{dir}/.git")
 
     puts dir
