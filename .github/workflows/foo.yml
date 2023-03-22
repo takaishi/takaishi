@@ -23,12 +23,13 @@ jobs:
 
       - name: Check for changes in 'my_directory' directory
         id: check_changes
+        continue-on-error: true
 #        env:
 #          BASE_SHA: ${{ github.event.pull_request.base.sha }}
 #          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           git diff --diff-filter=AM --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/bar
-          git diff --quiet --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/bar
+          git diff --quiet ${{ github.event.pull_request.base.sha }}.. -- foo/bar
           echo "has_changes=$?" >> $GITHUB_OUTPUT
 
   check:
