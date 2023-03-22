@@ -21,6 +21,7 @@ jobs:
         run: |
           git fetch origin main
           count=`git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/hoge | wc -l`
+          echo $count
           if [ $count -eq 0 ]; then
             echo "has_changes=0" >> $GITHUB_OUTPUT
           else
