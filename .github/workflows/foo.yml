@@ -27,7 +27,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          git diff --quiet ${BASE_SHA}...${HEAD_SHA} -- foo/bar
+          git diff --quiet ${BASE_SHA}... -- foo/bar
           echo "has_changes=$?" >> $GITHUB_OUTPUT
 
   check:
