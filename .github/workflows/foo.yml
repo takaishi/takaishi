@@ -20,9 +20,12 @@ jobs:
         id: check_changes
         run: |
           echo ===========================================
+          git diff --name-only ${{ github.event.pull_request.base.sha }}..
+          echo ===========================================
+          git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/aaa/
+          echo ===========================================
           git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/aaa/ | wc -l
           echo ===========================================
-          git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/aaa | wc -l
           count=`git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/hoge | wc -l`
           echo ===========================================
           echo $count
