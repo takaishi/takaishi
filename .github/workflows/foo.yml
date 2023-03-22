@@ -21,7 +21,7 @@ jobs:
       - name: Check for changes in 'my_directory' directory
         id: check_changes
         run: |
-          count=`git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/hoge | wc -l`
+          count=`git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/bar | wc -l`
           if [ $count -eq 0 ]; then
             echo "has_changes=0" >> $GITHUB_OUTPUT
           else
