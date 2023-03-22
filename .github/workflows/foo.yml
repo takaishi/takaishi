@@ -12,15 +12,19 @@ jobs:
       has_changes: ${{ steps.check_changes.outputs.has_changes }}
 
     steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          ref: ${{ github.event.pull_request.base.sha }}
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
       - uses: actions/checkout@v3
       - name: Check for changes in 'my_directory' directory
         id: check_changes
         run: |
-          git fetch origin main
+          echo ===========================================
+          git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/bar | wc -l
+          echo ===========================================
+          git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/hoge | wc -l
           count=`git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/hoge | wc -l`
+          echo ===========================================
           echo $count
           if [ $count -eq 0 ]; then
             echo "has_changes=0" >> $GITHUB_OUTPUT
