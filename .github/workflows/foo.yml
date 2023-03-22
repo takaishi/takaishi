@@ -8,25 +8,24 @@ on:
 jobs:
   check_changes:
     runs-on: ubuntu-latest
-#    outputs:
-#      has_changes: ${{ steps.check_changes.outputs.has_changes }}
+    outputs:
+      has_changes: ${{ steps.check_changes.outputs.has_changes }}
 
     steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          ref: ${{ github.event.pull_request.base.sha }}
       - uses: actions/checkout@v3
-
-      - uses: ./.github/actions/check_changes
+      - name: Check for changes in 'my_directory' directory
         id: check_changes
-        with:
-          path: foo/bar
-#      - name: Check for changes in 'my_directory' directory
-#        id: check_changes
-#        run: |
-#          count=`git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/bar | wc -l`
-#          if [ $count -eq 0 ]; then
-#            echo "has_changes=0" >> $GITHUB_OUTPUT
-#          else
-#            echo "has_changes=1" >> $GITHUB_OUTPUT
-#          fi
+        run: |
+          git fetch origin main
+          count=`git diff --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/bar | wc -l`
+          if [ $count -eq 0 ]; then
+            echo "has_changes=0" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=1" >> $GITHUB_OUTPUT
+          fi
 
   check:
     runs-on: ubuntu-latest
