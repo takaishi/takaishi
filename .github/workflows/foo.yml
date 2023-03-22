@@ -28,7 +28,7 @@ jobs:
 #          BASE_SHA: ${{ github.event.pull_request.base.sha }}
 #          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          git diff --diff-filter=AM --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/bar
+          git diff --diff-filter=AM --name-only ${{ github.event.pull_request.base.sha }}.. -- foo/hoge
           git diff --quiet ${{ github.event.pull_request.base.sha }}.. -- foo/bar
           echo "has_changes=$?" >> $GITHUB_OUTPUT
 
