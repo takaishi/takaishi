@@ -5,15 +5,20 @@ b = `git branch -a --format "%(refname)" | sd "refs/heads/" "" | sd "refs/" "" |
 commands = ''
 commands += "Checkout\n"
 commands += "New Branch from '#{b}'\n"
-commands += "Copy branch name"
+commands += "Copy branch name\n"
+commands += "Delete"
 
 puts cmd = `echo "#{commands}" | fzf`.chomp
 
 case cmd
 when 'Checkout'
-  system("git switch #{b}")
-when /New Branch from.*/
   `git switch #{b.gsub(/remotes\/origin\//, '')}`
+when /New Branch from.*/
+  print 'New branch name: '
+  new = gets
+  `git switch -c #{new.chomp} #{b}`
 when 'Copy branch name'
   `echo #{b} | pbcopy`
+when 'Delete'
+  `git branch -D #{b}`
 end

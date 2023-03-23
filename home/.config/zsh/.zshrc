@@ -199,3 +199,5 @@ if [ -f '~/opt/google-cloud-sdk/path.zsh.inc' ]; then . '~/opt/google-cloud-sdk/
 # The next line enables shell command completion for gcloud.
 if [ -f '~/opt/google-cloud-sdk/completion.zsh.inc' ]; then . '~/opt/google-cloud-sdk/completion.zsh.inc'; fi
 
+
+# eval "$(navi widget zsh)"

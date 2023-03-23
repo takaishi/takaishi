@@ -29,7 +29,7 @@ rescue OptionParser::InvalidOption => e
 end
 
 
-client = Octokit::Client.new(access_token: ENV['GITHUB_PERSONAL_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 client.auto_paginate = true
 
 repos = if opts[:org] != ''
@@ -38,7 +38,7 @@ repos = if opts[:org] != ''
           client.repositories(opts[:user], type: 'owner', archived: false)
         end
 
-repos.each do |repo|
+repos.reject{|repo| repo[:archived] }.each do |repo|
   puts repo[:full_name]
   unless Dir.exists?("#{ENV['HOME']}/src/github.com/#{repo[:full_name]}")
     system(`git clone #{repo[:ssh_url]} #{ENV['HOME']}/src/github.com/#{repo[:full_name]}`)
