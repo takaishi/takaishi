@@ -1,0 +1,10 @@
+name: foo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  hoge:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo hoge
