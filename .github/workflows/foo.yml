@@ -1,10 +1,20 @@
 name: foo
 
-on:
-  workflow_dispatch:
+on: [push]
 
 jobs:
-  hoge:
+  foo:
     runs-on: ubuntu-latest
     steps:
-      - run: echo hoge
+      - id: version
+        run: |
+          REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
+          tags="${REPOSITORY}:${{ github.sha }}"
+          if [ "${{ github.ref }}" != "" ]; then
+            tag=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+            tags="${tags},${REPOSITORY}:${tag}"
+          fi
+          echo "tags=${tags}" >> $GITHUB_OUTPUT
+      - name: output
+        run: |
+          echo ${{ steps.version.outputs.tags }}
