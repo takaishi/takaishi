@@ -1,0 +1,23 @@
+name: foo
+
+on:
+  push:
+    tags:
+      - *
+jobs:
+  foo:
+    runs-on: ubuntu-latest
+    steps:
+      - id: version
+        shell: bash
+        run: |
+          REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
+          tags="${REPOSITORY}:${{ github.sha }}"
+          if [[ ${{ github.ref }} =~ refs/tags/.* ]]; then
+            tag=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+            tags="${tags},${REPOSITORY}:${tag}"
+          fi
+          echo "tags=${tags}" >> $GITHUB_OUTPUT
+      - name: output
+        run: |
+          echo ${{ steps.version.outputs.tags }}
