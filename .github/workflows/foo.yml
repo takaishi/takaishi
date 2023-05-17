@@ -1,7 +1,9 @@
 name: foo
 
-on: [push]
-
+on:
+  push:
+    tags:
+      - *
 jobs:
   foo:
     runs-on: ubuntu-latest
