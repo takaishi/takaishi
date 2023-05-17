@@ -7,10 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: version
+        shell: bash
         run: |
           REPOSITORY=$(echo ${{ github.repository }} | sed -e "s#.*/##")
           tags="${REPOSITORY}:${{ github.sha }}"
-          if [ "${{ github.ref }}" =~ "refs/tags/".* ]; then
+          if [ ${{ github.ref }} =~ refs/tags/.* ]; then
             tag=$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
             tags="${tags},${REPOSITORY}:${tag}"
           fi
