@@ -81,7 +81,7 @@ eval "$(direnv hook zsh)"
 [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/r_takaishi/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/r_takaishi/google-cloud-sdk/path.zsh.inc'; fi
+if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/r_takaishi/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/r_takaishi/google-cloud-sdk/completion.zsh.inc'; fi
+if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc'; fi

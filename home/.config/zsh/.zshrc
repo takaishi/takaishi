@@ -141,6 +141,9 @@ setopt share_history
 setopt append_history
 setopt hist_ignore_all_dups
 
+if [ ! -f ~/.fzf.zsh ]; then
+  /opt/homebrew/opt/fzf/install
+fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
