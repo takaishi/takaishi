@@ -1,0 +1,14 @@
+name: foo
+
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  foo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo ${{ toJSON(github) }}
+        shell: bash
+
