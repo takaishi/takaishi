@@ -2,8 +2,9 @@ name: foo
 
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - main
+
 jobs:
   foo:
     runs-on: ubuntu-latest
