@@ -41,8 +41,8 @@ repos = if opts[:org] != ''
 repos.reject{|repo| repo[:archived] }.each do |repo|
   puts repo[:full_name]
   unless Dir.exist?("#{ENV['HOME']}/src/github.com/#{repo[:full_name]}")
-    puts `git clone #{repo[:ssh_url]} #{ENV['HOME']}/src/github.com/#{repo[:full_name]}`
-    system(`git clone #{repo[:ssh_url]} #{ENV['HOME']}/src/github.com/#{repo[:full_name]}`)
+    puts `gh repo clone #{repo[:full_name]}`
+    system(`gh repo clone #{repo[:full_name]} #{ENV['HOME']}/src/github.com/#{repo[:full_name]}`)
   end
 end
 
