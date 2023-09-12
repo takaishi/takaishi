@@ -22,7 +22,7 @@ jobs:
         id: get_pr_number
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.github-token }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           debug: true
           script: |
             const commit_hash = "${{ steps.get_commit_hash.outputs.commit_hash }}";
