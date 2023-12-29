@@ -8,6 +8,7 @@ type Options = {
     periodStart: string;
     periodEnd: string;
     orgs: string[];
+    excludeOrganizations: string[];
     repositories: string[];
     excludeRepositories: string[];
 };
@@ -18,8 +19,10 @@ const fetchPullRequests = async (options: Options) => {
         paginate: 'auto',
     });
     const orgs = options.orgs.map(repo => `org:${repo}`).join(' ');
+    const excludeOrganizations = options.excludeOrganizations.map(repo => `-org:${repo}`).join(' ');
     const excludeRepos = options.excludeRepositories.map(repo => `-repo:${repo}`).join(' ');
-    const q = `author:${options.user} created:${options.periodStart}..${options.periodEnd} ${orgs} ${excludeRepos} type:pr`
+    const q = `author:${options.user} created:${options.periodStart}..${options.periodEnd} ${orgs} ${excludeRepos} ${excludeOrganizations} type:pr`
+    console.log(q)
     const pullRequests = await octokit.paginate(octokit.search.issuesAndPullRequests, { q });
 
     return pullRequests.filter(pr => !options.excludeRepositories.includes(pr.repository_url.split('/').slice(-1)[0]));
@@ -27,6 +30,7 @@ const fetchPullRequests = async (options: Options) => {
 
 program.option(`--summarize`, 'summarize by OpenAI', false);
 program.option('--orgs <orgs>', 'Organizations', (value, previous) => previous.concat([value]), []);
+program.option('--exclude-orgs <orgs>', 'Exclude organizations', (value, previous) => previous.concat([value]), []);
 program.option('--username <username>', 'Username', (value, previous) => previous.concat([value]), []);
 program.option('--repos <repos>', 'Include repositories', (value, previous) => previous.concat([value]), []);
 program.option('--exclude-repos <repos>', 'Exclude repositories', (value, previous) => previous.concat([value]), []);
@@ -40,8 +44,9 @@ const options: Options = {
     periodStart: program.opts().start,
     periodEnd: program.opts().end,
     orgs: program.opts().orgs || [],
+    excludeOrganizations: program.opts().excludeOrgs || [],
     repositories: program.opts().repositories || [],
-    excludeRepositories: program.opts().exclude_repositories || [],
+    excludeRepositories: program.opts().excludeRepos || [],
 };
 
 
