@@ -1,0 +1,21 @@
+{
+  "name": "takaishi",
+  "version": "1.0.0",
+  "description": "![takaishi github stats](https://github-readme-stats.vercel.app/api?username=takaishi)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "commander": "^11.1.0",
+    "octokit": "^3.1.2",
+    "openai": "^4.19.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.1.2",
+    "typescript": "^5.2.2"
+  }
+}
