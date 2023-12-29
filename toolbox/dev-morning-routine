@@ -14,3 +14,12 @@ brew update && brew upgrade && brew upgrade --cask --greedy && brew cleanup
 
 dev-install-ruby
 
+npm cache clean --force
+yarn cache clean
+
+latest_tf_version=$(tfenv list-remote | sort -h | grep -v "-" | tail -n 1)
+tfenv use $latest_tf_version
+for v in $(tfenv list | grep -v $(tfenv list-remote | sort -h | grep -v "-" | tail -n 1) | sed 's/ //g'); do
+  tfenv uninstall $v
+done
+
