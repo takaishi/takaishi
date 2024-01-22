@@ -8,6 +8,11 @@ shift + alt - e: yabai -m window --toggle float && yabai -m window --grid 1:10:3
 shift + alt - 8: yabai -m window --toggle float && yabai -m window --grid 1:10:0:0:5:1
 shift + alt - 9: yabai -m window --toggle float && yabai -m window --grid 1:10:5:0:5:1
 
+shift + alt - 0 [
+  "google chrome" ~
+  * : yabai -m window --toggle float && yabai -m window --grid 1:10:5:0:5:1
+]
+
 # swap window(よく使う)
 #shift + alt - h : yabai -m window --swap west
 #shift + alt - j : yabai -m window --swap south
