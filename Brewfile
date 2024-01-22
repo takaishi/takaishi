@@ -89,7 +89,6 @@ brew "coreutils"
 brew "dbus"
 brew "deno"
 brew "go"
-brew "dep"
 brew "dfu-programmer"
 brew "dfu-util"
 brew "direnv"
@@ -276,6 +275,7 @@ brew "sachaos/todoist/todoist"
 brew "takaishi/fomulas/csv2tbl"
 brew "yq"
 brew "mas"
+brew "rust"
 
 cask "gpg-suite"
 cask "font-ricty-diminished"
@@ -289,15 +289,15 @@ cask "zoom"
 cask "obsidian"
 cask "visual-studio-code"
 
-mas "GIPHY", id: 668208984
-mas "Keynote", id: 409183694
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Slack", id: 803453959
-mas "Todoist", id: 585829637
-mas "ToyViewer", id: 414298354
-mas "Yoink", id: 457622435
-mas "iMovie", id: 408981434
-mas "MeetingBar", id: 1532419400
-mas "Tot", id: 1491071483
+# mas "GIPHY", id: 668208984
+# mas "Keynote", id: 409183694
+# mas "Numbers", id: 409203825
+# mas "Pages", id: 409201541
+# mas "Slack", id: 803453959
+# mas "Todoist", id: 585829637
+# mas "ToyViewer", id: 414298354
+# mas "Yoink", id: 457622435
+# mas "iMovie", id: 408981434
+# mas "MeetingBar", id: 1532419400
+# mas "Tot", id: 1491071483
 
