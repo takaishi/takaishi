@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+REPO=$1
+
+gh repo clone $REPO ~/src/github.com/$REPO
