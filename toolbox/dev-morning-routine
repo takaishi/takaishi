@@ -3,7 +3,7 @@
 set -xe
 
 dev-source-update
-cindex -no-follow-symlinks -reset -exclude ~/.cindex_excludes ~/src
+#cindex -no-follow-symlinks -reset -exclude ~/.cindex_excludes ~/src
 
 cd ~/src/github.com/takaishi/takaishi
 git stash pop
