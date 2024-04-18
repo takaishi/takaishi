@@ -55,5 +55,4 @@ cask "zoom"
 cask "obsidian"
 cask "session-manager-plugin"
 
-mas "Slack", id: 803453959
 
