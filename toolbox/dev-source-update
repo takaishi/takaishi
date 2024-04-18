@@ -14,7 +14,7 @@ def run(dir, cmd)
   _, err, _ = Open3.capture3(cmd)
   if err != '' && !err.start_with?('Already on ')
     puts <<~EOS
-      ERROR: #{dir}, #{cmd}
+      #{dir}, #{cmd}
       #{err}
     EOS
   end
@@ -63,13 +63,13 @@ Dir.chdir(root_dir) do
 
     if has_origin_url?(dir) && deleted?(octokit, dir)
       puts "delete deleted repo: #{root_dir}/#{dir}"
-      system("rm -rf #{root_dir}/#{dir}")
+      #system("rm -rf #{root_dir}/#{dir}")
       next
     end
 
     if archived?(octokit, dir)
       puts "delete archived repo: #{root_dir}/#{dir}"
-      system("rm -rf #{root_dir}/#{dir}")
+      #system("rm -rf #{root_dir}/#{dir}")
       next
     end
 
