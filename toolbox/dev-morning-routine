@@ -15,6 +15,7 @@ brew update && brew upgrade && brew upgrade --cask --greedy && brew cleanup
 dev-install-ruby
 
 npm cache clean --force
+npm install -g yarn
 yarn cache clean
 
 latest_tf_version=$(tfenv list-remote | sort -h | grep -v "-" | tail -n 1)

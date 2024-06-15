@@ -69,7 +69,7 @@ Dir.chdir(root_dir) do
 
     if archived?(octokit, dir)
       puts "delete archived repo: #{root_dir}/#{dir}"
-      #system("rm -rf #{root_dir}/#{dir}")
+      # system("rm -rf #{root_dir}/#{dir}")
       next
     end
 
