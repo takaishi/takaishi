@@ -1,4 +1,5 @@
 .config/alacritty
 .config/zsh
+.config/atuin
 bin
 .gnupg
