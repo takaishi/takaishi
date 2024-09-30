@@ -41,7 +41,7 @@ export DYLD_LIBRARY_PATH=$HOMEBREW_DIR/Cellar/openssl/1.0.2s/lib
 export QMK_HOME=$HOME/src/github.com/takaishi/qmk_firmware
 export RUBY_CONFIGURE_OPTS=--with-openssl-dir=$HOMEBREW_DIR/opt/openssl@1.1
 export PATH=$HOME/opt/google-cloud-sdk/bin:$PATH
+export PATH=/opt/homebrew/opt/postgresql@16/bin:$PATH
 
 export PATH="$HOME/.rbenv/bin:$PATH"
-export GPG_TTY=$(tty)
-. "$HOME/.cargo/env"
+export PATH=$HOME/.pyenv/shims:$PATH

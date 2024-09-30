@@ -133,10 +133,14 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
-
 export HISTFILE="$XDG_DATA_HOME"/zsh/history
 export HISTSIZE=100000
 export SAVEHIST=100000
+HISTORY_IGNORE="(ls|pwd|cd)*"
+setopt EXTENDED_HISTORY
+setopt HIST_IGNORE_SPACE
+setopt HIST_NO_STORE
+
 setopt share_history
 setopt append_history
 setopt hist_ignore_all_dups
@@ -183,6 +187,7 @@ function u() {
 }
 
 eval "$(rbenv init -)"
+#eval "$(pyenv init -)"
 export EDITOR=vim
 eval "$(direnv hook zsh)"
 
@@ -204,3 +209,11 @@ if [ -f '~/opt/google-cloud-sdk/completion.zsh.inc' ]; then . '~/opt/google-clou
 
 
 # eval "$(navi widget zsh)"
+
+
+if [ -f '/opt/homebrew/bin/gsed' ]; then
+  alias sed='gsed'
+fi
+
+
+eval "$(atuin init zsh --disable-up-arrow)"

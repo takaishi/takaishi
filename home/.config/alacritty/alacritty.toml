@@ -1,4 +1,4 @@
-# alt_send_esc = true
+
 # enable_experimental_conpty_backend = false
 import = ["/Users/r_takaishi/.config/alacritty/local.yml"]
 live_config_reload = true
@@ -70,6 +70,17 @@ key = "Paste"
 [[keyboard.bindings]]
 action = "Copy"
 key = "Copy"
+
+[[keyboard.bindings]]
+action = "None"
+key = "\""
+mods = "Shift|Control"
+
+[[keyboard.bindings]]
+action = "None"
+key = "j"
+mods = "Shift|Control"
+
 
 [[keyboard.bindings]]
 action = "ClearLogNotice"
