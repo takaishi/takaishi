@@ -186,8 +186,8 @@ function u() {
   fi
 }
 
+eval "$(nodenv init -)"
 eval "$(rbenv init -)"
-#eval "$(pyenv init -)"
 export EDITOR=vim
 eval "$(direnv hook zsh)"
 
@@ -210,10 +210,12 @@ if [ -f '~/opt/google-cloud-sdk/completion.zsh.inc' ]; then . '~/opt/google-clou
 
 # eval "$(navi widget zsh)"
 
-
 if [ -f '/opt/homebrew/bin/gsed' ]; then
   alias sed='gsed'
 fi
 
 
 eval "$(atuin init zsh --disable-up-arrow)"
+
+source /Users/r_takaishi/.config/op/plugins.sh
+

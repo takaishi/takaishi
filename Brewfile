@@ -29,6 +29,12 @@ brew "postgresql"
 brew "kayac/tap/ecspresso"
 brew "cw"
 brew "envchain"
+brew "stern"
+brew "watch"
+brew "oven-sh/bun/bun"
+brew "qmk/qmk/qmk"
+brew "fujiwara/tap/lambroll"
+brew "ngrok/ngrok/ngrok"
 
 
 # Rails, Dreamkast

@@ -45,3 +45,5 @@ export PATH=/opt/homebrew/opt/postgresql@16/bin:$PATH
 
 export PATH="$HOME/.rbenv/bin:$PATH"
 export PATH=$HOME/.pyenv/shims:$PATH
+export GPG_TTY=$(tty)
+#. "$HOME/.cargo/env"
