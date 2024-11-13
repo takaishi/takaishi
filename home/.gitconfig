@@ -2,8 +2,7 @@
   root = ~/src
 
 [core]
-  excludesfile = ~/.gitignore_global
-	autocrlf = input
+  autocrlf = input
 
 [filter "lfs"]
   required = true
