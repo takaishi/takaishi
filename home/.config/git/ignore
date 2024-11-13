@@ -1,0 +1,10 @@
+.idea
+.DS_Store
+.terraform
+.env
+.env*
+.envrc
+*.backup
+*/**/node_modules
+env/dev*
+.r_takaishi
