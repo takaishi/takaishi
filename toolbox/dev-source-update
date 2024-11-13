@@ -61,28 +61,28 @@ Dir.chdir(root_dir) do
 
     puts dir
 
-    if has_origin_url?(dir) && deleted?(octokit, dir)
-      puts "delete deleted repo: #{root_dir}/#{dir}"
-      #system("rm -rf #{root_dir}/#{dir}")
-      next
-    end
-
-    if archived?(octokit, dir)
-      puts "delete archived repo: #{root_dir}/#{dir}"
-      # system("rm -rf #{root_dir}/#{dir}")
-      next
-    end
+    # if has_origin_url?(dir) && deleted?(octokit, dir)
+      # puts "delete deleted repo: #{root_dir}/#{dir}"
+      # next
+    # end
+# 
+    # if archived?(octokit, dir)
+      # puts "delete archived repo: #{root_dir}/#{dir}"
+      # next
+    # end
 
     Dir.chdir(dir) do
       _, _, status = Open3.capture3('git config --local --get remote.origin.url')
       if status.exited? && status.exitstatus.zero?
-        run(dir, 'git fetch --prune --no-tags')
-        run(dir, 'git stash')
-        run(dir, "git remote show origin | grep 'HEAD branch' | awk '{print $NF}' | xargs git switch")
-        run(dir, 'git pull --rebase --prune')
-        run(dir, 'git submodule update --init --recursive')
-        run(dir, 'git gc --prune')
-        run(dir, 'git delete-merged-branches')
+         head_branch = `git remote show origin | grep 'HEAD branch' | awk '{print $NF}'`.chomp!
+        run(dir, "git fetch && git switch #{head_branch} && git pull && gh poi")
+        # run(dir, 'git fetch --prune --no-tags')
+        # run(dir, 'git stash')
+        # run(dir, "git remote show origin | grep 'HEAD branch' | awk '{print $NF}' | xargs git switch")
+        # run(dir, 'git pull --rebase --prune')
+        # run(dir, 'git submodule update --init --recursive')
+        # run(dir, 'git gc --prune')
+        # run(dir, 'git delete-merged-branches')
       end
     end
   end
