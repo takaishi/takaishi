@@ -34,7 +34,6 @@ brew "watch"
 brew "oven-sh/bun/bun"
 brew "qmk/qmk/qmk"
 brew "fujiwara/tap/lambroll"
-brew "ngrok/ngrok/ngrok"
 
 
 # Rails, Dreamkast
