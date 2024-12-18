@@ -6,7 +6,7 @@ set -xe
 #cindex -no-follow-symlinks -reset -exclude ~/.cindex_excludes ~/src
 
 cd ~/src/github.com/takaishi/takaishi
-git stash pop
+#git stash pop
 homesick link --force takaishi
 
 brew bundle --no-lock
