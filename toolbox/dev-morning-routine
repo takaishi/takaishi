@@ -2,7 +2,7 @@
 
 set -xe
 
-dev-source-update
+#dev-source-update
 #cindex -no-follow-symlinks -reset -exclude ~/.cindex_excludes ~/src
 
 cd ~/src/github.com/takaishi/takaishi

@@ -50,11 +50,9 @@ brew "go"
 
 
 
-cask "alacritty"
 cask "visual-studio-code"
 cask "1password-cli"
 cask "gpg-suite"
-cask "sequel-ace"
 cask "discord"
 cask "zoom"
 cask "obsidian"

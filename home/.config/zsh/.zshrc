@@ -186,7 +186,6 @@ function u() {
   fi
 }
 
-eval "$(nodenv init -)"
 eval "$(rbenv init -)"
 export EDITOR=vim
 eval "$(direnv hook zsh)"
