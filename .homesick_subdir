@@ -2,5 +2,6 @@
 .config/zsh
 .config/atuin
 .config/git
+.config/wezterm
 bin
 .gnupg
