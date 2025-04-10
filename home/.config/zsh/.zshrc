@@ -240,3 +240,4 @@ function select-git-branch-friendly() {
 zle -N select-git-branch-friendly
 bindkey '^b' select-git-branch-friendly
 
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
