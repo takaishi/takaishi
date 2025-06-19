@@ -1,0 +1,108 @@
+#!/bin/bash
+
+# Scrapbox日記ページの遡及作成スクリプト
+# 今日から過去に遡って、存在しない日記ページを作成する
+#
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Scrapbox Diary Backfill
+# @raycast.mode fullOutput
+# @raycast.packageName Scrapbox Tools
+#
+# Optional parameters:
+# @raycast.icon 📓
+# @raycast.currentDirectoryPath ~
+# @raycast.needsConfirmation true
+#
+# Documentation:
+# @raycast.description 今日から過去に遡って、存在しないScrapbox日記ページを自動作成します
+# @raycast.author r_takaishi
+# @raycast.authorURL https://github.com/takaishi
+
+set -e
+
+SCRAPBOX_PROJECT="rtakaishi"
+BASE_URL="https://scrapbox.io/${SCRAPBOX_PROJECT}"
+
+# URL エンコード関数
+urlencode() {
+    local string="${1}"
+    local strlen=${#string}
+    local encoded=""
+    local pos c o
+
+    for (( pos=0 ; pos<strlen ; pos++ )); do
+        c=${string:$pos:1}
+        case "$c" in
+            [-_.~a-zA-Z0-9] ) o="${c}" ;;
+            * )               printf -v o '%%%02x' "'$c"
+        esac
+        encoded+="${o}"
+    done
+    echo "${encoded}"
+}
+
+# 日付からテンプレートを生成
+generate_template() {
+    local date="$1"
+    local year=$(date -j -f "%Y-%m-%d" "$date" "+%Y")
+    local year_month=$(date -j -f "%Y-%m-%d" "$date" "+%Y-%m")
+    local prev_date=$(date -j -v-1d -f "%Y-%m-%d" "$date" "+%Y-%m-%d")
+    local next_date=$(date -j -v+1d -f "%Y-%m-%d" "$date" "+%Y-%m-%d")
+    
+    cat <<EOF
+#Journal #${year} #${year_month}
+Prev: [${prev_date}] | Next: [${next_date}]
+EOF
+}
+
+# ページの存在確認
+check_page_exists() {
+    local date="$1"
+    local status_code=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/${date}-dev")
+    
+    if [ "$status_code" = "200" ]; then
+        return 0  # ページが存在
+    else
+        return 1  # ページが存在しない
+    fi
+}
+
+# ページ作成
+create_page() {
+    local date="$1"
+    local template=$(generate_template "$date")
+    local encoded_template=$(urlencode "$template")
+    echo "${BASE_URL}/${date}-dev"
+    local url="${BASE_URL}/${date}-dev?body=${encoded_template}"
+    
+    echo "Creating page for $date"
+    # open "$url"
+    sleep 2  # ブラウザが開くまで少し待つ
+}
+
+# メイン処理
+main() {
+    local current_date=$(date "+%Y-%m-%d")
+    
+    echo "Starting backfill process from $current_date"
+    
+    while true; do
+        echo "Checking page for $current_date"
+        
+        if check_page_exists "$current_date"; then
+            echo "Page exists for $current_date. Stopping."
+            break
+        else
+            echo "Page does not exist for $current_date. Creating..."
+            create_page "$current_date"
+        fi
+        
+        # 前日に移動
+        current_date=$(date -j -v-1d -f "%Y-%m-%d" "$current_date" "+%Y-%m-%d")
+    done
+    
+    echo "Backfill process completed."
+}
+
+main "$@"
