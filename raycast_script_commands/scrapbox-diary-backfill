@@ -56,12 +56,15 @@ Prev: [${prev_date}] | Next: [${next_date}]
 EOF
 }
 
-# ページの存在確認
+# ページの存在確認（YYYY-MM-DD または YYYY-MM-DD_仮）
 check_page_exists() {
     local date="$1"
-    local status_code=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/${date}-dev")
-    
-    if [ "$status_code" = "200" ]; then
+    local status_code1=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/${date}")
+    echo "${BASE_URL}/${date}: $status_code1"
+    local status_code2=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/${date}_仮")
+    echo "${BASE_URL}/${date}_仮: $status_code2"
+
+    if [ "$status_code1" = "200" ] || [ "$status_code2" = "200" ]; then
         return 0  # ページが存在
     else
         return 1  # ページが存在しない
@@ -73,8 +76,8 @@ create_page() {
     local date="$1"
     local template=$(generate_template "$date")
     local encoded_template=$(urlencode "$template")
-    echo "${BASE_URL}/${date}-dev"
-    local url="${BASE_URL}/${date}-dev?body=${encoded_template}"
+    echo "${BASE_URL}/${date}_仮"
+    local url="${BASE_URL}/${date}_仮?body=${encoded_template}"
     
     echo "Creating page for $date"
     # open "$url"
@@ -84,23 +87,35 @@ create_page() {
 # メイン処理
 main() {
     local current_date=$(date "+%Y-%m-%d")
+    local missing_dates=()
     
     echo "Starting backfill process from $current_date"
     
+    # まず、存在しない日付を収集
     while true; do
         echo "Checking page for $current_date"
         
         if check_page_exists "$current_date"; then
-            echo "Page exists for $current_date. Stopping."
+            echo "Page exists for $current_date (either ${current_date} or ${current_date}_仮). Stopping search."
             break
         else
-            echo "Page does not exist for $current_date. Creating..."
-            create_page "$current_date"
+            echo "Page does not exist for $current_date"
+            missing_dates+=("$current_date")
         fi
         
         # 前日に移動
         current_date=$(date -j -v-1d -f "%Y-%m-%d" "$current_date" "+%Y-%m-%d")
     done
+    
+    # 古い順（配列の逆順）で作成
+    if [ ${#missing_dates[@]} -gt 0 ]; then
+        echo "Creating pages in chronological order..."
+        for (( i=${#missing_dates[@]}-1 ; i>=0 ; i-- )); do
+            create_page "${missing_dates[i]}"
+        done
+    else
+        echo "No missing pages found."
+    fi
     
     echo "Backfill process completed."
 }
