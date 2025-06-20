@@ -215,62 +215,62 @@ if [ -f '/opt/homebrew/bin/gsed' ]; then
 fi
 
 
-# eval "$(atuin init zsh --disable-up-arrow)"
+eval "$(atuin init zsh --disable-up-arrow)"
 
-# if [ -f '~/.config/op/plugins.sh' ]; then
-#   source /Users/r_takaishi/.config/op/plugins.sh
-# fi
+if [ -f '~/.config/op/plugins.sh' ]; then
+  source /Users/r_takaishi/.config/op/plugins.sh
+fi
 
 # # https://www.mizdra.net/entry/2024/10/19/172323
-# export FZF_DEFAULT_OPTS="--reverse --no-sort --no-hscroll --preview-window=down"
+export FZF_DEFAULT_OPTS="--reverse --no-sort --no-hscroll --preview-window=down"
 
-# user_name=$(git config user.name)
-# fmt="\
-# %(if:equals=$user_name)%(authorname)%(then)%(color:default)%(else)%(color:brightred)%(end)%(refname:short)|\
-# %(committerdate:relative)|\
-# %(subject)"
-# function select-git-branch-friendly() {
-#   selected_branch=$(
-#     git branch --sort=-committerdate --format=$fmt --color=always \
-#     | column -ts'|' \
-#     | fzf --ansi --exact --preview='git log --oneline --graph --decorate --color=always -50 {+1}' \
-#     | awk '{print $1}' \
-#   )
-#   BUFFER="${LBUFFER}${selected_branch}${RBUFFER}"
-#   CURSOR=$#LBUFFER+$#selected_branch
-#   zle redisplay
-# }
-# zle -N select-git-branch-friendly
-# bindkey '^b' select-git-branch-friendly
+user_name=$(git config user.name)
+fmt="\
+%(if:equals=$user_name)%(authorname)%(then)%(color:default)%(else)%(color:brightred)%(end)%(refname:short)|\
+%(committerdate:relative)|\
+%(subject)"
+function select-git-branch-friendly() {
+  selected_branch=$(
+    git branch --sort=-committerdate --format=$fmt --color=always \
+    | column -ts'|' \
+    | fzf --ansi --exact --preview='git log --oneline --graph --decorate --color=always -50 {+1}' \
+    | awk '{print $1}' \
+  )
+  BUFFER="${LBUFFER}${selected_branch}${RBUFFER}"
+  CURSOR=$#LBUFFER+$#selected_branch
+  zle redisplay
+}
+zle -N select-git-branch-friendly
+bindkey '^b' select-git-branch-friendly
 
-# if type brew &>/dev/null; then
-#   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
 
-#   autoload -Uz compinit
-#   compinit
-# fi
+  autoload -Uz compinit
+  compinit
+fi
 
-# [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
-
-
-# eval "$(pyenv init --path)"
-# eval "$(pyenv init -)"
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 
 
-# function preexec() {
-#   local secret_regex="(AKIA[0-9A-Z]{16}|[Aa][Ww][Ss].{0,20}[\"'][0-9A-Za-z/+=]{40}[\"']|ghp_[0-9A-Za-z]{36}|github_pat_[0-9A-Za-z]{22}_[0-9A-Za-z]{59}|AIza[0-9A-Za-z_\-]{35}|xox[baprs]-[0-9]{11}-[0-9]{11}-[0-9A-Za-z]{24}|sk_live_[0-9A-Za-z]{24}|sk-[A-Za-z0-9]{48}|-----BEGIN[[:space:]]+(EC|PGP|DSA|RSA|OPENSSH)?PRIVATE[[:space:]]+KEY)"
-#   if print "$1" | grep -Eq "$secret_regex"; then
-#     echo "🚫 シークレットらしき文字列が検出されました。コマンドの実行を中止します。"
-#     kill -SIGINT $$
-#   fi
-# }
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
 
-# awslogs() {
-#   set -e
-#   export AWS_PROFILE=$(cat ~/.aws/config | awk '/^\[profile /{print $2}' | tr -d ']' | fzf)
-#   local log_group=$(aws logs describe-log-groups | jq -r '.logGroups[].logGroupName' | fzf)
-#   aws logs tail "$log_group" --since 3h --follow --format=short
-# }
+
+function preexec() {
+  local secret_regex="(AKIA[0-9A-Z]{16}|[Aa][Ww][Ss].{0,20}[\"'][0-9A-Za-z/+=]{40}[\"']|ghp_[0-9A-Za-z]{36}|github_pat_[0-9A-Za-z]{22}_[0-9A-Za-z]{59}|AIza[0-9A-Za-z_\-]{35}|xox[baprs]-[0-9]{11}-[0-9]{11}-[0-9A-Za-z]{24}|sk_live_[0-9A-Za-z]{24}|sk-[A-Za-z0-9]{48}|-----BEGIN[[:space:]]+(EC|PGP|DSA|RSA|OPENSSH)?PRIVATE[[:space:]]+KEY)"
+  if print "$1" | grep -Eq "$secret_regex"; then
+    echo "🚫 シークレットらしき文字列が検出されました。コマンドの実行を中止します。"
+    kill -SIGINT $$
+  fi
+}
+
+awslogs() {
+  set -e
+  export AWS_PROFILE=$(cat ~/.aws/config | awk '/^\[profile /{print $2}' | tr -d ']' | fzf)
+  local log_group=$(aws logs describe-log-groups | jq -r '.logGroups[].logGroupName' | fzf)
+  aws logs tail "$log_group" --since 3h --follow --format=short
+}
 
 # # Merged from home/.zshrc
 # # Amazon Q pre block. Keep at the top of this file.
