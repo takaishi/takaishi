@@ -221,6 +221,7 @@ function u() {
   fi
 }
 
+eval "$(nodenv init -)"
 eval "$(rbenv init -)"
 export EDITOR=vim
 eval "$(direnv hook zsh)"
@@ -251,9 +252,11 @@ fi
 
 eval "$(atuin init zsh --disable-up-arrow)"
 
-source /Users/r_takaishi/.config/op/plugins.sh
+if [ -f '~/.config/op/plugins.sh' ]; then
+  source /Users/r_takaishi/.config/op/plugins.sh
+fi
 
-# https://www.mizdra.net/entry/2024/10/19/172323
+# # https://www.mizdra.net/entry/2024/10/19/172323
 export FZF_DEFAULT_OPTS="--reverse --no-sort --no-hscroll --preview-window=down"
 
 user_name=$(git config user.name)
@@ -275,10 +278,132 @@ function select-git-branch-friendly() {
 zle -N select-git-branch-friendly
 bindkey '^b' select-git-branch-friendly
 
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+
+  autoload -Uz compinit
+  compinit
+fi
+
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
+
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+
+
+function preexec() {
+  local secret_regex="(AKIA[0-9A-Z]{16}|[Aa][Ww][Ss].{0,20}[\"'][0-9A-Za-z/+=]{40}[\"']|ghp_[0-9A-Za-z]{36}|github_pat_[0-9A-Za-z]{22}_[0-9A-Za-z]{59}|AIza[0-9A-Za-z_\-]{35}|xox[baprs]-[0-9]{11}-[0-9]{11}-[0-9A-Za-z]{24}|sk_live_[0-9A-Za-z]{24}|sk-[A-Za-z0-9]{48}|-----BEGIN[[:space:]]+(EC|PGP|DSA|RSA|OPENSSH)?PRIVATE[[:space:]]+KEY)"
+  if print "$1" | grep -Eq "$secret_regex"; then
+    echo "🚫 シークレットらしき文字列が検出されました。コマンドの実行を中止します。"
+    kill -SIGINT $$
+  fi
+}
+
+awslogs() {
+  set -e
+  export AWS_PROFILE=$(cat ~/.aws/config | awk '/^\[profile /{print $2}' | tr -d ']' | fzf)
+  local log_group=$(aws logs describe-log-groups | jq -r '.logGroups[].logGroupName' | fzf)
+  aws logs tail "$log_group" --since 3h --follow --format=short
+}
+
+# # Merged from home/.zshrc
+# # Amazon Q pre block. Keep at the top of this file.
+# [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.pre.zsh"
+# # Fig pre block. Keep at the top of this file.
+# [[ -f "$HOME/.fig/shell/zshrc.pre.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.pre.zsh"
+# export PATH="/usr/local/bin/:~/.rbenv/shims:$HOME/.rbenv/bin:$PATH"
+# eval "$(rbenv init -)"
+# export PATH="/usr/local/opt/imagemagick@6/bin:$PATH"
+# export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+# export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+# export PATH=$HOME/.nodebrew/current/bin:$PATH
+# export EDITOR=vim
+
+# ##
+# # History (merged settings)
+# ##
+# HISTFILE=~/.zhistory            # where to store zsh config
+# HISTSIZE=10240                  # big history
+# SAVEHIST=10240                  # big history
+# setopt append_history           # 複数のzshを使ったときにヒストリを上書きではなく追加する
+# setopt hist_ignore_all_dups     # 重複しないようにする
+# unsetopt hist_ignore_space      # ignore space prefixed commands
+# setopt hist_reduce_blanks       # trim blanks
+# setopt hist_verify              # show before executing history commands
+# setopt inc_append_history       # add commands as they are typed, don't wait until shell exit 
+# setopt share_history            # share hist between sessions
+# setopt bang_hist                # !keyword
+
+# ##
+# # Alias
+# ##
+# alias gl='cd $(ghq root)/$(ghq list | peco)'
+# alias gd='git diff --color -w'
+
+# if [[ -x `which colordiff` ]]; then
+#   alias diff='colordiff -u'
+# else
+#   alias diff='diff -u'
+# fi
+
+# # zshにpeco + ghqを導入したメモ - Qiita - http://qiita.com/ysk_1031/items/8cde9ce8b4d0870a129d
+# #
+# # $ brew tap peco/peco
+# # $ brew install peco
+# #
+# # $ brew tap motemen/ghq
+# # $ brew install ghq
+# #
+# if type peco > /dev/null 2>&1; then
+#     setopt hist_ignore_all_dups
+#     function peco_select_history() {
+#         local tac
+#         if which tac > /dev/null; then
+#             tac="tac"
+#         else
+#             tac="tail -r"
+#         fi
+#         BUFFER=$(fc -l -n 1 | eval $tac | peco --query "$LBUFFER")
+#         CURSOR=$#BUFFER
+#         zle clear-screen
+#     }
+#     zle -N peco_select_history
+#     bindkey '^r' peco_select_history
+# else
+#     echo "peco is not found."
+# fi
+
+# function _peco_ssh () {
+#   peco | xargs -I{} bash -c "ssh {} < /dev/tty";
+# }
+
+# for file in `ls $HOME/.zsh.d`; do
+#   source $HOME/.zsh.d/$file
+# done
+
+# autoload -U compinit
+# compinit -u
+
+# eval "$(direnv hook zsh)"
+
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# # Fig post block. Keep at the bottom of this file.
+# [[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+
+# # The next line updates PATH for the Google Cloud SDK.
+# if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc'; fi
+
+# # The next line enables shell command completion for gcloud.
+# if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc'; fi
+
+# # Amazon Q post block. Keep at the bottom of this file.
+# [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
+
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
     autoload -Uz compinit
     compinit
 fi
-
