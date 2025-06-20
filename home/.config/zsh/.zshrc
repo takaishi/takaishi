@@ -285,9 +285,6 @@ if type brew &>/dev/null; then
   compinit
 fi
 
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
-
-
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 
@@ -402,6 +399,7 @@ awslogs() {
 # [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
 if type brew &>/dev/null; then
     FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
     autoload -Uz compinit
