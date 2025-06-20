@@ -53,6 +53,35 @@ WORDCHARS=${WORDCHARS//[\/]}
 alias g='git'
 alias gd='git diff'
 alias k='kubectl'
+alias gl='cd $(ghq root)/$(ghq list | peco)'
+alias gd='git diff --color -w'
+
+if [[ -x `which colordiff` ]]; then
+  alias diff='colordiff -u'
+else
+  alias diff='diff -u'
+fi
+
+autoload -U compinit
+compinit -u
+
+eval "$(direnv hook zsh)"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Fig post block. Keep at the bottom of this file.
+[[ -f "$HOME/.fig/shell/zshrc.post.zsh" ]] && builtin source "$HOME/.fig/shell/zshrc.post.zsh"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc'; fi
+
+
+
+
+
 
 #
 # input
@@ -141,9 +170,15 @@ setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_SPACE
 setopt HIST_NO_STORE
 
-setopt share_history
 setopt append_history
 setopt hist_ignore_all_dups
+unsetopt hist_ignore_space      # ignore space prefixed commands
+unsetopt hist_ignore_space      # ignore space prefixed commands
+setopt hist_reduce_blanks       # trim blanks
+setopt hist_verify              # show before executing history commands
+setopt inc_append_history       # add commands as they are typed, don't wait until shell exit
+setopt share_history            # share hist between sessions
+setopt bang_hist                # !keyword
 
 if [ ! -f ~/.fzf.zsh ]; then
   /opt/homebrew/opt/fzf/install
@@ -365,3 +400,10 @@ awslogs() {
 
 # # Amazon Q post block. Keep at the bottom of this file.
 # [[ -f "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/amazon-q/shell/zshrc.post.zsh"
+
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+if type brew &>/dev/null; then
+    FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+    autoload -Uz compinit
+    compinit
+fi

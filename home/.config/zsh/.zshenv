@@ -19,6 +19,7 @@ export PATH=$HOMEBREW_DIR/python/libexec/bin:$PATH
 export PATH=$HOME/Library/Python/3.7/bin:$PATH
 export PATH=$HOME/.nodebrew/current/bin:$PATH
 export PATH=$HOME/.nodenv/shims:$PATH
+export PATH=$HOME/.asdf/shims:$PATH
 export PATH=$HOME/src/github.com/takaishi/takaishi/toolbox:$PATH
 export PATH=$HOME/Library/Application\ Support/JetBrains/Toolbox/scripts:$PATH
 
