@@ -23,6 +23,7 @@ set -e
 
 SCRAPBOX_PROJECT="rtakaishi"
 BASE_URL="https://scrapbox.io/${SCRAPBOX_PROJECT}"
+BASE_API_URL="https://scrapbox.io/api"
 
 # URL エンコード関数
 urlencode() {
@@ -59,9 +60,9 @@ EOF
 # ページの存在確認（YYYY-MM-DD または YYYY-MM-DD_仮）
 check_page_exists() {
     local date="$1"
-    local status_code1=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/${date}")
+    local status_code1=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_API_URL}/pages/${SCRAPBOX_PROJECT}/${date}/text")
     echo "${BASE_URL}/${date}: $status_code1"
-    local status_code2=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_URL}/${date}_仮")
+    local status_code2=$(curl -s -o /dev/null -w "%{http_code}" "${BASE_API_URL}/pages/${SCRAPBOX_PROJECT}/${date}_仮/text")
     echo "${BASE_URL}/${date}_仮: $status_code2"
 
     if [ "$status_code1" = "200" ] || [ "$status_code2" = "200" ]; then
@@ -80,7 +81,7 @@ create_page() {
     local url="${BASE_URL}/${date}_仮?body=${encoded_template}"
     
     echo "Creating page for $date"
-    # open "$url"
+    open "$url"
     sleep 2  # ブラウザが開くまで少し待つ
 }
 
