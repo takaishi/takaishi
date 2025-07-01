@@ -96,6 +96,7 @@ unset key
 bindkey '^g' fzf-ghq
 bindkey '^z' zi
 bindkey '^b' select-git-branch-friendly
+bindkey '^p' aws-profile-widget
 
 # ==================================================
 # 5. ALIASES
@@ -158,6 +159,26 @@ function select-git-branch-friendly() {
   zle redisplay
 }
 zle -N select-git-branch-friendly
+
+# AWS Profile switching widget
+aws-profile-widget() {
+  local line="$BUFFER"
+  local profile=$(aws configure list-profiles | fzf --height=10 --layout=reverse --prompt="AWS Profile: ")
+  
+  if [[ -n "$profile" ]]; then
+    if [[ "$line" =~ "AWS_PROFILE=([^[:space:]]+)" ]]; then
+      # Replace existing AWS_PROFILE
+      BUFFER="${line/AWS_PROFILE=$match[1]/AWS_PROFILE=$profile}"
+    else
+      # Add AWS_PROFILE at the beginning if not exists
+      BUFFER="AWS_PROFILE=$profile $line"
+    fi
+    CURSOR=$#BUFFER
+  fi
+  zle redisplay
+}
+zle -N aws-profile-widget
+
 
 # Navigate to git repository root
 function u() {
