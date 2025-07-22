@@ -225,11 +225,13 @@ cdpath=(~ ..)
 # 8. DEVELOPMENT ENVIRONMENT
 # ==================================================
 
-# Version managers
-eval "$(nodenv init -)"
-eval "$(rbenv init -)"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+# Source lazy loading utility
+source "${ZDOTDIR:-$HOME/.config/zsh}/lazy-load.zsh"
+
+# Lazy load version managers
+lazy_load_nodenv
+lazy_load_rbenv
+lazy_load_pyenv
 
 # Environment management
 eval "$(direnv hook zsh)"
@@ -239,65 +241,58 @@ eval "$(direnv hook zsh)"
 # ==================================================
 
 # FZF setup and configuration
-if [ ! -f ~/.fzf.zsh ]; then
-  /opt/homebrew/opt/fzf/install
-fi
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS="--reverse --no-sort --no-hscroll --preview-window=down"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Zoxide (smart cd)
-eval "$(zoxide init zsh)"
-zle -N zi
+# Zoxide (smart cd) - lazy loaded
+lazy_load z 'eval "$(zoxide init zsh)"'
+lazy_load zi 'eval "$(zoxide init zsh)" && zle -N zi'
 
-# Atuin (shell history)
-eval "$(atuin init zsh --disable-up-arrow)"
+# Atuin (shell history) - lazy loaded for non-interactive commands
+if [[ $- == *i* ]]; then
+  eval "$(atuin init zsh --disable-up-arrow)"
+fi
 
 # History substring search
 source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 # VS Code shell integration
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+if [[ "$TERM_PROGRAM" == "vscode" ]] && command -v code &>/dev/null; then
+  . "$(code --locate-shell-integration-path zsh)"
+fi
 
 # 1Password CLI
-if [ -f '~/.config/op/plugins.sh' ]; then
-  source /Users/r_takaishi/.config/op/plugins.sh
+if [ -f "$HOME/.config/op/plugins.sh" ]; then
+  source "$HOME/.config/op/plugins.sh"
 fi
 
 # ==================================================
 # 10. CLOUD & EXTERNAL SERVICES
 # ==================================================
 
-# Google Cloud SDK
-if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc' ]; then
-  . '/Users/r_takaishi/opt/google-cloud-sdk/path.zsh.inc'
-fi
-if [ -f '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc' ]; then
-  . '/Users/r_takaishi/opt/google-cloud-sdk/completion.zsh.inc'
-fi
-
-# Alternative Google Cloud SDK paths
-if [ -f '~/opt/google-cloud-sdk/path.zsh.inc' ]; then
-  . '~/opt/google-cloud-sdk/path.zsh.inc'
-fi
-if [ -f '~/opt/google-cloud-sdk/completion.zsh.inc' ]; then
-  . '~/opt/google-cloud-sdk/completion.zsh.inc'
-fi
+# Google Cloud SDK (lazy loaded)
+lazy_load_gcloud
 
 # ==================================================
 # 11. COMPLETION SYSTEM
 # ==================================================
 
-# Basic completion setup
-autoload -U compinit
-compinit -u
-
-# Homebrew completions
+# Homebrew completions setup with optimized compinit
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-  autoload -Uz compinit
-  compinit
 fi
+
+# Optimized compinit with daily cache refresh
+autoload -Uz compinit
+zcompdump_file="${ZDOTDIR:-$HOME}/.zcompdump"
+if [[ $zcompdump_file -nt /usr/share/zsh ]] && [[ ! $zcompdump_file.zwc -ot $zcompdump_file ]]; then
+  compinit -C
+else
+  compinit
+  [[ -f "$zcompdump_file" && ! -f "$zcompdump_file.zwc" ]] && zcompile "$zcompdump_file"
+fi
+unset zcompdump_file
 
 # ==================================================
 # LEGACY/DISABLED CONFIGURATION
@@ -325,3 +320,7 @@ fi
 #ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 #setopt CORRECT
 #SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+#
+# if (which zprof > /dev/null 2>&1) ;then
+#   zprof
+# fi
