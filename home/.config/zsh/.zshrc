@@ -179,6 +179,34 @@ aws-profile-widget() {
 }
 zle -N aws-profile-widget
 
+# Checkout a PR selected via gh + fzf
+gh-pr-checkout() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "gh not found. Please install gh via Homebrew: brew install gh"
+    return 1
+  fi
+  if ! command -v fzf >/dev/null 2>&1; then
+    echo "fzf not found. Please install fzf via Homebrew: brew install fzf"
+    return 1
+  fi
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Please run this command in a Git repository."
+    return 1
+  fi
+
+  local selection pr_number
+  selection=$(
+    gh pr list --limit 200 --state "open" \
+      --json number,title,author,headRefName,baseRefName,updatedAt \
+      --jq 'sort_by(.updatedAt) | reverse | .[] | ["#" + ( .number|tostring ), .title, "@" + .author.login, .headRefName + " -> " + .baseRefName, (.updatedAt | fromdateiso8601 | now - . | if . < 60 then "\(. | floor)s ago" elif . < 3600 then "\(. / 60 | floor)m ago" elif . < 86400 then "\(. / 3600 | floor)h ago" elif . < 2592000 then "\(. / 86400 | floor)d ago" elif . < 31536000 then "\(. / 2592000 | floor)mo ago" else "\(. / 31536000 | floor)y ago" end)] | @tsv' \
+      | column -t -s $'\t' \
+      | fzf --ansi --no-multi --height=80% --prompt="PR を選択: "
+  )
+
+  [[ -z "$selection" ]] && return 1
+  pr_number=$(echo "$selection" | awk '{print $1}' | tr -d '#')
+  gh pr checkout "$pr_number"
+}
 
 # Navigate to git repository root
 function u() {
@@ -277,11 +305,17 @@ lazy_load_gcloud
 # 11. COMPLETION SYSTEM
 # ==================================================
 
-# Homebrew completions setup with optimized compinit
-if type brew &>/dev/null; then
-  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
-fi
+# Basic completion setup
+#autoload -U compinit
+#compinit -u
+
+# Homebrew completions
+#if type brew &>/dev/null; then
+#  FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
+#  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+#  autoload -Uz compinit
+#  compinit
+#fi
 
 # Optimized compinit with daily cache refresh
 autoload -Uz compinit
