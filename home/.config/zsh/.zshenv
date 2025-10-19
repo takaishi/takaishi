@@ -3,7 +3,7 @@
 export ZDOTDIR=$HOME/.config/zsh
 
 
-case $(uname -m) in
+case $(/usr/bin/uname -m) in
   x86_64 ) export HOMEBREW_DIR=/usr/local ;;
   arm64 ) export HOMEBREW_DIR=/opt/homebrew ;;
 esac
@@ -51,6 +51,7 @@ export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua
 
 
 
+export PATH="$HOME/.rbenv/shims:$PATH"
 export PATH="$HOME/.rbenv/bin:$PATH"
 export PATH=$HOME/.pyenv/shims:$PATH
 export PYENV_ROOT="$HOME/.pyenv"
