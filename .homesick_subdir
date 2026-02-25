@@ -3,5 +3,6 @@
 .config/atuin
 .config/git
 .config/wezterm
+.config/zeno
 bin
 .gnupg

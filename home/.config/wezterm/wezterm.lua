@@ -13,6 +13,8 @@ local config = {
   keys = {
     { key = "-", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment },
     { key = "Enter", mods = "ALT", action = wezterm.action.DisableDefaultAssignment },
+--    { key = "j", mods = "CTRL|SHIFT", action = wezterm.action.Nop },
+
   },
 }
 

@@ -47,7 +47,7 @@ shift + alt - d : yabai -m window --resize right:20:0
 # toggle desktop offset
 #alt - a : yabai -m space --toggle padding && yabai -m space --toggle gap
 # toggle window fullscreen zoom
-#alt - f : yabai -m window --toggle zoom-fullscreen
+# alt - d : yabai -m window --toggle zoom-fullscreen
 # toggle window native fullscreen
 #shift + alt - f : yabai -m window --toggle float
 # toggle window split type

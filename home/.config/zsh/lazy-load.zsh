@@ -50,3 +50,8 @@ lazy_load_gcloud() {
     lazy_load bq '. "$HOME/opt/google-cloud-sdk/path.zsh.inc" && . "$HOME/opt/google-cloud-sdk/completion.zsh.inc"'
   fi
 }
+
+lazy_load_zoxide() {
+  lazy_load zoxide 'eval "$(zoxide init zsh)"'
+}
+

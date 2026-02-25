@@ -1,0 +1,6 @@
+completions:
+  - name: instance-id
+    patterns:
+      - "aws ec2-instance-connect ssh --instance-id( .*)?"
+    sourceCommand: "aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId, Tags[?Key==`Name`].Value | [0]]' --output text"
+    callback: "awk -F ' ' '{ print $1 }'"

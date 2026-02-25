@@ -47,8 +47,8 @@ export PATH=$HOME/opt/google-cloud-sdk/bin:$PATH
 export PATH=/opt/homebrew/opt/postgresql@16/bin:$PATH
 export PATH="/opt/homebrew/opt/mysql@8.0/bin:$PATH"
 export PATH="${AQUA_ROOT_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/aquaproj-aqua}/bin:$PATH"
-
-
+export PATH="/opt/homebrew/opt/postgresql@17/bin:$PATH"
+export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 
 
 export PATH="$HOME/.rbenv/shims:$PATH"

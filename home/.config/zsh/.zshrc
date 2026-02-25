@@ -32,31 +32,31 @@ export EDITOR=vim
 # 2. ZIM FRAMEWORK CONFIGURATION
 # ==================================================
 
-# Start configuration added by Zim install {{{
-# Download zimfw plugin manager if missing
-ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
-if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
-  if (( ${+commands[curl]} )); then
-    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  else
-    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  fi
-fi
-
-# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init -q
-fi
-
-# Initialize modules
-source ${ZIM_HOME}/init.zsh
-
-# Zim module configuration
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-# }}} End configuration added by Zim install
+# # Start configuration added by Zim install {{{
+# # Download zimfw plugin manager if missing
+# ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
+# if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+#   if (( ${+commands[curl]} )); then
+#     curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+#         https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+#   else
+#     mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
+#         https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+#   fi
+# fi
+# 
+# # Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated
+# if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+#   source ${ZIM_HOME}/zimfw.zsh init -q
+# fi
+# 
+# # Initialize modules
+# source ${ZIM_HOME}/init.zsh
+# 
+# # Zim module configuration
+# ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+# ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+# # }}} End configuration added by Zim install
 
 # ==================================================
 # 3. HISTORY MANAGEMENT
@@ -97,6 +97,8 @@ bindkey '^g' fzf-ghq
 bindkey '^z' zi
 bindkey '^b' select-git-branch-friendly
 bindkey '^p' aws-profile-widget
+bindkey -r "^J"
+bindkey -r "^[J"
 
 # ==================================================
 # 5. ALIASES
@@ -128,12 +130,23 @@ fi
 # 6. CUSTOM FUNCTIONS
 # ==================================================
 
-# fzf + ghq integration for repository navigation
+# fzf + ghq integration for repository navigation (includes worktrees)
 fzf-ghq() {
-  local repo=$(ghq list | fzf)
-  if [ -n "$repo" ]; then
-    repo=$(ghq list --full-path --exact $repo)
-    BUFFER="cd ${repo}"
+  local ghq_root=$(ghq root)
+  local selected=$( {
+    ghq list | while read -r repo; do
+      echo "$repo"
+      if [ -d "$ghq_root/$repo/.git/worktrees" ]; then
+        git -C "$ghq_root/$repo" worktree list | tail -n +2 | awk '{print $1}' | while read -r wt_path; do
+          case "$wt_path" in
+            "$ghq_root"/*) echo "${wt_path#$ghq_root/}" ;;
+          esac
+        done
+      fi
+    done
+  } | fzf)
+  if [ -n "$selected" ]; then
+    BUFFER="cd ${ghq_root}/${selected}"
     zle accept-line
   fi
   zle clear-screen
@@ -358,3 +371,40 @@ unset zcompdump_file
 # if (which zprof > /dev/null 2>&1) ;then
 #   zprof
 # fi
+#
+
+
+
+
+
+### Added by Zinit's installer
+export ZENO_HOME=~/.config/zeno
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+zinit pack for fzf
+zinit ice compile'(pure|async).zsh' pick'async.zsh' src'pure.zsh'
+zinit light sindresorhus/pure
+zinit ice lucid depth"1" blockf
+zinit light yuki-yano/zeno.zsh
+### End of Zinit's installer chunk
+if [[ -n $ZENO_LOADED ]]; then
+  bindkey ' '  zeno-auto-snippet
+  bindkey '^i' zeno-completion
+fi
