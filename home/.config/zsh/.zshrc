@@ -408,3 +408,6 @@ if [[ -n $ZENO_LOADED ]]; then
   bindkey ' '  zeno-auto-snippet
   bindkey '^i' zeno-completion
 fi
+
+# bun completions
+[ -s "/Users/r_takaishi/.bun/_bun" ] && source "/Users/r_takaishi/.bun/_bun"

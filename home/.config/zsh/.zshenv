@@ -24,6 +24,8 @@ export PATH=$HOME/.nodenv/shims:$PATH
 export PATH=$HOME/.asdf/shims:$PATH
 export PATH=$HOME/src/github.com/takaishi/takaishi/toolbox:$PATH
 export PATH=$HOME/Library/Application\ Support/JetBrains/Toolbox/scripts:$PATH
+export PATH=$HOME/.local/bin/:$PATH
+export PATH=$HOME/.bun/bin:$PATH
 
 export PATH=$HOMEBREW_DIR/opt/gnu-time/libexec/gnubin:$PATH
 export PATH=$HOME/.krew/bin:$PATH
